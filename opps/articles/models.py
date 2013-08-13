@@ -477,6 +477,7 @@ class ArticleBox(BaseBox):
         related_name='articlebox_querysets',
         verbose_name=_(u'Query Set')
     )
+    order = models.PositiveIntegerField(_(u'Order'), default=0)
 
     class Meta:
         verbose_name = _('Article box')

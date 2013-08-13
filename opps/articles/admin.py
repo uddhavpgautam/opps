@@ -226,7 +226,7 @@ class ArticleBoxAdmin(BaseBoxAdmin):
     inlines = [ArticleBoxArticlesInline]
     raw_id_fields = ['channel', 'article', 'queryset']
     list_display = ['name', 'channel_name', 'date_available',
-                    'published']
+                    'published', 'order']
 
     fieldsets = (
         (_(u'Identification'), {
@@ -235,7 +235,7 @@ class ArticleBoxAdmin(BaseBoxAdmin):
             'fields': ('channel', 'article', 'queryset')}),
         (_(u'Publication'), {
             'classes': ('extrapretty'),
-            'fields': ('published', 'date_available')}),
+            'fields': ('published', 'date_available', 'order')}),
     )
 
     def clean_ended_entries(self, request, queryset):
