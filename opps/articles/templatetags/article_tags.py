@@ -42,6 +42,26 @@ def get_articlebox(context, slug, template_name=None):
         'context': context
     }))
 
+@register.simple_tag(takes_context=True)
+def get_articlebox_group(context, position, **kwargs):
+
+    template_name = kwargs.get('template_name', None)
+    slug = kwargs.get('partial_slug', None)
+
+    articleboxes = ArticleBox.objects.filter(site=settings.SITE_ID, slug__icontains=slug,
+                                              date_available__lte=timezone.now(),
+                                              order=position, published=True)
+
+    t = template.loader.get_template('articles/articlebox_group.html')
+    if template_name:
+        t = template.loader.get_template(template_name)
+
+    return t.render(template.Context({
+        'articleboxes': articleboxes,
+        'slug': slug,
+        'context': context
+    }))
+
 
 @register.simple_tag
 def get_all_articlebox(channel_long_slug, template_name=None):
