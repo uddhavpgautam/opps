@@ -31,8 +31,12 @@ class ArticleImageInline(admin.TabularInline):
 
     def image_thumb(self, obj):
         if obj.image:
-            return u'<img width="60px" height="60px" src="{0}" />'.format(
-                image_url(obj.image.image.url, width=60, height=60))
+            html = (u'<img width="60px" height="60px" class="image_thumb" '
+                    u'src="{0}" data-original="{1}" />')
+            return html.format(
+                image_url(obj.image.image.url, width=60, height=60),
+                image_url(obj.image.image.url, width=640, height=480)
+            )
         return _(u'No Image')
     image_thumb.short_description = _(u'Thumbnail')
     image_thumb.allow_tags = True
