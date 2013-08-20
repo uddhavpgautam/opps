@@ -21,8 +21,8 @@ def cache_page(*dec_args, **dec_kwargs):
     cache_alias = dec_kwargs.pop('cache', None)
     key_prefix = dec_kwargs.pop('key_prefix', '')
 
-    def decorator(func):
-        def wrapped(*func_args, **func_kwargs):
+    def decorator_maker(func):
+        def decorator(*func_args, **func_kwargs):
             request = func_args[0]
             cache_prefix = u'{}-{}-{}'.format(
                 key_prefix,
@@ -34,8 +34,8 @@ def cache_page(*dec_args, **dec_kwargs):
                 cache_timeout,
                 cache=cache_alias,
                 key_prefix=cache_prefix
-            )(lambda *args, **kwargs: func(*func_args, **func_kwargs))
+            )(func)
 
             return do_cache(*func_args, **func_kwargs)
-        return wrapped
-    return decorator
+        return decorator
+    return decorator_maker
