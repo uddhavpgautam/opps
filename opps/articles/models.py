@@ -187,7 +187,7 @@ class Article(Publishable, Slugged):
         self.main_image.description = self.main_image_caption
 
         imgs = [self.main_image]
-        images = self.images.select_related('source').filter(
+        images = self.images.prefetch_related('source').filter(
             published=True, date_available__lte=timezone.now()
         ).order_by('articleimage__order')
 
@@ -205,6 +205,14 @@ class Article(Publishable, Slugged):
 
         cache.set(cachekey, imgs)
         return imgs
+
+    def clean(self, *args, **kwargs):
+        article = Article.objects.filter(
+            slug=self.slug, site=self.site)
+        if self.id:
+            article = article.exclude(id=self.id)
+        if len(article) >= 1:
+            raise ValidationError(_(u'Slug field exists, choose another!'))
 
 
 class Post(Article):
@@ -243,7 +251,7 @@ class Post(Article):
             date_available__lte=timezone.now()
         )
         for album in albums:
-            images = album.images.select_related('source').filter(
+            images = album.images.prefetch_related('source').filter(
                 published=True,
                 date_available__lte=timezone.now()
             ).exclude(
@@ -486,14 +494,13 @@ class ArticleBox(BaseBox):
     def ordered_articles(self, field='order'):
         now = timezone.now()
         qs = self.articles.filter(
+            models.Q(articleboxarticles_articles__date_end__gte=now) |
+            models.Q(articleboxarticles_articles__date_end__isnull=True),
             published=True,
             date_available__lte=now,
             articleboxarticles_articles__date_available__lte=now
-        ).filter(
-            models.Q(articleboxarticles_articles__date_end__gte=now) |
-            models.Q(articleboxarticles_articles__date_end__isnull=True)
-        )
-        return qs.order_by('articleboxarticles_articles__order').distinct()
+        ).order_by('articleboxarticles_articles__order').distinct()
+        return qs
 
     def get_queryset(self):
         """
