@@ -32,7 +32,9 @@ class UserListFilter(SimpleListFilter):
         in the right sidebar.
         """
         # filter only users with images
-        qs = User.objects.filter(image__isnull=False).distinct()
+        users_id = Image.objects.values_list('user_id', flat=True)
+
+        qs = User.objects.filter(pk__in=users_id)
         if qs:
             return set([(item.username,
                          u"{0} ({1})".format(item.get_full_name(), item.email))
@@ -104,7 +106,7 @@ class ImagesAdmin(PublishableAdmin):
     def opps_editor_select(self, obj):
         return '''
         <a href="#" onclick="top.opps_editor_popup_selector('{0}')">{1}</a>
-        '''.format(image_url(obj.image.url, width=200, height=200),
+        '''.format(image_url(obj.image.url),
                    'Select')
     opps_editor_select.short_description = _(u'Select')
     opps_editor_select.allow_tags = True

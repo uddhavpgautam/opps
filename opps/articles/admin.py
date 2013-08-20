@@ -8,7 +8,7 @@ from django.contrib.admin import SimpleListFilter
 from .models import Post, Album, Article, Link, ArticleSource, ArticleImage
 from .models import (ArticleBox, ArticleBoxArticles, ArticleConfig,
                      PostRelated, AlbumRelated)
-from opps.core.admin import PublishableAdmin
+from opps.core.admin import PublishableAdmin, HaystackModelAdmin
 from opps.core.admin import apply_opps_rules
 from opps.core.admin import BaseBoxAdmin
 from opps.core.admin import ChannelListFilter, UserListFilter
@@ -110,7 +110,7 @@ class AlbumRelatedInline(admin.TabularInline):
 
 
 @apply_opps_rules('articles')
-class PostAdmin(ArticleAdmin):
+class PostAdmin(HaystackModelAdmin, ArticleAdmin):
     form = PostAdminForm
     inlines = [ArticleImageInline, ArticleSourceInline, PostRelatedInline]
     raw_id_fields = ['main_image', 'channel', 'albums']
@@ -141,10 +141,10 @@ class AlbumAdminForm(forms.ModelForm):
 
 
 @apply_opps_rules('articles')
-class AlbumAdmin(ArticleAdmin):
+class AlbumAdmin(HaystackModelAdmin, ArticleAdmin):
     form = AlbumAdminForm
     inlines = [ArticleImageInline, ArticleSourceInline, AlbumRelatedInline]
-    list_display = ['title', 'channel', 'images_count',
+    list_display = ['title', 'channel_long_slug', 'images_count',
                     'date_available', 'published', 'preview_url']
 
     fieldsets = (
@@ -230,7 +230,7 @@ class ArticleBoxAdmin(BaseBoxAdmin):
     inlines = [ArticleBoxArticlesInline]
     raw_id_fields = ['channel', 'article', 'queryset']
     list_display = ['name', 'channel_name', 'date_available',
-                    'published']
+                    'published', 'order']
 
     fieldsets = (
         (_(u'Identification'), {
@@ -239,7 +239,7 @@ class ArticleBoxAdmin(BaseBoxAdmin):
             'fields': ('channel', 'article', 'queryset')}),
         (_(u'Publication'), {
             'classes': ('extrapretty'),
-            'fields': ('published', 'date_available')}),
+            'fields': ('published', 'date_available', 'order')}),
     )
 
     def clean_ended_entries(self, request, queryset):
