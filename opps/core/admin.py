@@ -230,12 +230,14 @@ class BaseBoxAdmin(PublishableAdmin):
 
     def queryset(self, request):
         qs = super(BaseBoxAdmin, self).queryset(request)
+        """
         try:
             # only supersusers can see queryset boxes
             if not request.user.is_superuser:
                 qs = qs.filter(queryset__isnull=True)
         except:
             pass  # admin model soes not have the queryset field
+        """
         return qs
 
 
