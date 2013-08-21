@@ -184,7 +184,8 @@ class Article(Publishable, Slugged):
         if getcache:
             return getcache
 
-        self.main_image.description = self.main_image_caption
+        if self.main_image_caption:
+            self.main_image.description = self.main_image_caption
 
         imgs = [self.main_image]
         images = self.images.prefetch_related('source').filter(
