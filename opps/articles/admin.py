@@ -69,10 +69,6 @@ class ArticleBoxArticlesInline(admin.TabularInline):
                    'title', 'short_title', 'main_image',
                    'main_image_caption')})]
 
-    def get_extra(self, request, obj=None, **kwargs):
-        import pdb; pdb.set_trace()
-        pass
-
 
 class PostAdminForm(forms.ModelForm):
     class Meta:
