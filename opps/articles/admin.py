@@ -59,13 +59,19 @@ class ArticleSourceInline(admin.TabularInline):
 class ArticleBoxArticlesInline(admin.TabularInline):
     model = ArticleBoxArticles
     fk_name = 'articlebox'
-    raw_id_fields = ['article']
+    raw_id_fields = ['article', 'main_image']
     actions = None
     ordering = ('order',)
     extra = 1
     fieldsets = [(None, {
         'classes': ('collapse',),
-        'fields': ('article', 'order', 'date_available', 'date_end')})]
+        'fields': ('article', 'order', 'date_available', 'date_end',
+                   'title', 'short_title', 'main_image',
+                   'main_image_caption')})]
+
+    def get_extra(self, request, obj=None, **kwargs):
+        import pdb; pdb.set_trace()
+        pass
 
 
 class PostAdminForm(forms.ModelForm):
