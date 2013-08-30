@@ -40,6 +40,7 @@ if not settings.configured:
         ),
         SITE_ID = 1,
         ROOT_URLCONF = "opps.urls",
+        THUMBOR_ENABLED = True,
         TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner',
         HAYSTACK_CONNECTIONS = {
             'default': {
