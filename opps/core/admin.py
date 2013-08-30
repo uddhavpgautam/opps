@@ -149,7 +149,8 @@ class PublishableAdmin(admin.ModelAdmin):
     It sets user (author) based on data from requet.
     """
     list_display = ['title', 'channel_long_slug',
-                    'date_available', 'published', 'preview_url']
+                    'date_available', 'published', 'preview_url',
+                    'http_absolute_url']
     list_filter = ['child_class', 'date_available', 'published']
     search_fields = ['title', 'slug', 'headline', 'channel_name']
     exclude = ('user',)
@@ -208,6 +209,16 @@ class PublishableAdmin(admin.ModelAdmin):
         )
     preview_url.short_description = _(u"View on site")
     preview_url.allow_tags = True
+
+    def http_absolute_url(self, obj):
+        html = (u'<a href="#" onclick="alert(\'{href}\')" id="copylink">'
+                u'<i class="icon-eye-open icon-alpha75"></i>{text}</a>')
+        return html.format(
+            href=obj.get_http_absolute_url(),
+            text=_(u"Show URL")
+        )
+    http_absolute_url.short_description = _(u"Show URL")
+    http_absolute_url.allow_tags = True
 
 
 class BaseBoxAdmin(PublishableAdmin):

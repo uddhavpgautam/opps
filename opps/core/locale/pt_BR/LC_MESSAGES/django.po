@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opps\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-11 15:33-0300\n"
+"POT-Creation-Date: 2013-08-21 18:19-0300\n"
 "PO-Revision-Date: 2013-05-06 19:52+0000\n"
 "Last-Translator: josene <jsene@yacows.com.br>\n"
 "Language-Team: Portuguese (Brazil) <opps-developers@googlegroups.com>\n"
@@ -27,51 +27,59 @@ msgstr ""
 msgid "Core"
 msgstr "Modelo base"
 
-#: admin.py:19 models.py:117 models.py:198
+#: admin.py:47 models.py:155 models.py:236
 msgid "Channel"
 msgstr "Canal"
 
-#: admin.py:40
+#: admin.py:68
 msgid "No channel"
 msgstr "Nenhum Canal"
 
-#: admin.py:99
+#: admin.py:111 models.py:28
+msgid "User"
+msgstr "Usuário"
+
+#: admin.py:164
 msgid "Publish/Unpublish"
 msgstr "Publicar/Não Publicar"
 
-#: admin.py:119
+#: admin.py:184
 msgid "This item is not in a box"
 msgstr "Este item não está em um box"
 
-#: admin.py:121
+#: admin.py:186
 msgid "Article boxes"
 msgstr "Boxes de artigo"
 
-#: admin.py:127
+#: admin.py:192
 msgid "No Image"
 msgstr "Sem imagem"
 
-#: admin.py:128
+#: admin.py:193
 msgid "Thumbnail"
 msgstr "Miniatura"
 
-#: admin.py:136
+#: admin.py:201
 msgid "Images"
 msgstr "Imagens"
 
-#: admin.py:143 admin.py:145
+#: admin.py:208 admin.py:210
 msgid "View on site"
 msgstr "Ver no site"
 
-#: admin.py:158
+#: admin.py:218 admin.py:220
+msgid "Show URL"
+msgstr "Mostrar URL Final"
+
+#: admin.py:233
 msgid "Identification"
 msgstr "Identificação"
 
-#: admin.py:160
+#: admin.py:235
 msgid "Relationships"
 msgstr "Relacionamentos"
 
-#: admin.py:162
+#: admin.py:237
 msgid "Publication"
 msgstr "Publicação"
 
@@ -82,10 +90,6 @@ msgstr "Data de inserção"
 #: models.py:19
 msgid "Date update"
 msgstr "Data de atualização"
-
-#: models.py:28
-msgid "User"
-msgstr "Usuário"
 
 #: models.py:29
 msgid "Site"
@@ -99,62 +103,65 @@ msgstr "Data de publicação"
 msgid "Published"
 msgstr "Publicado"
 
-#: models.py:51
-msgid "URL"
-msgstr "URL"
-
-#: models.py:70
-msgid "The URL already exists as a redirect"
-msgstr "A URL já existe como um redirecionamento"
-
-#: models.py:99
-msgid "Box name"
-msgstr "Nome do box"
-
-#: models.py:101
+#: models.py:51 models.py:139
 msgid "Slug"
 msgstr "slug"
 
-#: models.py:109 models.py:190
+#: models.py:73
+msgid "The URL already exists as a redirect"
+msgstr "A URL já existe como um redirecionamento"
+
+#: models.py:114
+msgid "URL already exists."
+msgstr "A URL já existe como um redirecionamento"
+
+#: models.py:137
+msgid "Box name"
+msgstr "Nome do box"
+
+#: models.py:147 models.py:228
 msgid "Only published article"
 msgstr "Apenas artigo publicado"
 
-#: models.py:111 models.py:192
+#: models.py:149 models.py:230
 msgid "Article"
 msgstr "Artigo"
 
-#: models.py:120
+#: models.py:158
 msgid "Channel name"
 msgstr "Nome do Canal"
 
-#: models.py:126
+#: models.py:164
 msgid "Channel long slug"
 msgstr "Slug do canal longo"
 
-#: models.py:168
+#: models.py:206
 msgid "Config Key Group"
 msgstr "Grupo de configuração da chave"
 
-#: models.py:176
+#: models.py:214
 msgid "Config Key"
 msgstr "Chave de configuração"
 
-#: models.py:182
+#: models.py:220
 msgid "Format"
 msgstr "Formato"
 
-#: models.py:184
+#: models.py:222
 msgid "Config Value"
 msgstr "Valor de configuração"
 
-#: models.py:185
+#: models.py:223
 msgid "Description"
 msgstr "Descrição"
 
-#: models.py:226
+#: models.py:264
 #, python-format
 msgid "Can't format the value to %s"
 msgstr "Não é possível formatar o valor para %s"
+
+#~ msgid "URL"
+#~ msgstr "URL"
 
 #~ msgid "Text"
 #~ msgstr "Text"

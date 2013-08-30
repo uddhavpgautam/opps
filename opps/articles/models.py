@@ -184,7 +184,8 @@ class Article(Publishable, Slugged):
         if getcache:
             return getcache
 
-        self.main_image.description = self.main_image_caption
+        if self.main_image_caption:
+            self.main_image.description = self.main_image_caption
 
         imgs = [self.main_image]
         images = self.images.prefetch_related('source').filter(
@@ -528,6 +529,35 @@ class ArticleBoxArticles(models.Model):
     date_available = models.DateTimeField(_(u"Date available"),
                                           default=timezone.now, null=True)
     date_end = models.DateTimeField(_(u"End date"), null=True, blank=True)
+
+    title = models.CharField(_(u"Title"), max_length=140,
+                             null=True, blank=True)
+    short_title = models.CharField(
+        _(u"Short title"),
+        max_length=140,
+        null=True, blank=True,
+    )
+    main_image = models.ForeignKey(
+        'images.Image',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_(u'Main Image'),
+    )
+    main_image_caption = models.CharField(
+        _(u"Main Image Caption"),
+        max_length=4000,
+        blank=True,
+        null=True,
+        help_text=_(u'Maximum characters 4000'),
+    )
+
+    def save(self, *args, **kwargs):
+        self.title = self.article.title
+        self.short_title = self.article.short_title
+        self.main_image = self.article.main_image
+        self.main_image_caption = self.article.main_image_caption
+
+        super(ArticleBoxArticles, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('order',)
