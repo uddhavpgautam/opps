@@ -51,14 +51,19 @@ class PostList(OppsList):
         for box in self.articleboxes:
             self.excluded_ids.update([a.pk for a in box.ordered_articles()])
 
-        self.article = Article.objects.filter(
+        filters = dict(
             site_domain=self.site,
             channel_long_slug__in=self.channel_long_slug,
             date_available__lte=timezone.now(),
             published=True,
             child_class__in=self.models,
-            show_on_root_channel=True
         )
+
+        if self.channel and self.channel.is_root_node():
+            filters['show_on_root_channel'] = True
+
+        self.article = Article.objects.filter(**filters)
+        
         if not self.request.GET.get(self.page_kwarg):
             self.article = self.article.exclude(pk__in=self.excluded_ids)
 
