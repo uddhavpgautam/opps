@@ -18,6 +18,7 @@ class OppsView(object):
     context_object_name = "context"
     paginate_by = settings.OPPS_PAGINATE_BY
     limit = settings.OPPS_VIEWS_LIMIT
+    page_kwarg = 'page'
 
     def __init__(self):
         self.slug = None
