@@ -180,13 +180,17 @@ class OppsList(OppsView, ListView):
         for box in self.articleboxes:
             self.excluded_ids.update([a.pk for a in box.ordered_articles()])
 
-        self.article = self.model.objects.filter(
+        filters = dict(
             site_domain=self.site,
             channel_long_slug__in=self.channel_long_slug,
             date_available__lte=timezone.now(),
             published=True,
-            show_on_root_channel=True
-        ).exclude(pk__in=self.excluded_ids)
+        )
+
+        if self.channel and self.channel.is_root_node():
+            filters['show_on_root_channel'] = True
+
+        self.article = self.model.objects.filter(**filters).exclude(pk__in=self.excluded_ids)
 
         if self.limit:
             self.article = self.article[:self.limit]
