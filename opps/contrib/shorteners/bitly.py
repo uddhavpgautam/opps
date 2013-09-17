@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from . import BaseShortener
 
+
 class BitlyShortener(BaseShortener):
     shorten_url = 'http://api.bit.ly/shorten'
     expand_url = 'http://api.bit.ly/expand'
@@ -48,5 +49,3 @@ class BitlyShortener(BaseShortener):
                 hash_key = data['results'].keys()[0]
                 return data['results'][hash_key]['longUrl']
         return u''
-
-
