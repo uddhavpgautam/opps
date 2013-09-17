@@ -4,6 +4,7 @@ import requests
 
 from . import BaseShortener
 
+
 class GoogleShortener(BaseShortener):
     """
     Based on:
@@ -12,7 +13,7 @@ class GoogleShortener(BaseShortener):
     api_url = "https://www.googleapis.com/urlshortener/v1/url"
 
     def short(self):
-        params = json.dumps({'longUrl': self.url })
+        params = json.dumps({'longUrl': self.url})
         headers = {'content-type': 'application/json'}
         response = requests.post(self.api_url, data=params,
                                  headers=headers)
@@ -23,12 +24,10 @@ class GoogleShortener(BaseShortener):
         return u''
 
     def expand(self):
-        params = {'shortUrl': self.url }
+        params = {'shortUrl': self.url}
         response = requests.get(self.api_url, params=params)
         if response.ok:
             data = response.json()
             if 'longUrl' in data:
                 return data['longUrl']
         return u''
-
-
