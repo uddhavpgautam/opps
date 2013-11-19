@@ -3,8 +3,10 @@ from django import template
 from django.conf import settings
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from django.core.cache import cache
 
 from opps.articles.models import ArticleBox
+from opps.core.middleware import _is_mobile
 
 
 register = template.Library()
@@ -25,6 +27,16 @@ def is_articlebox(slug):
 @register.simple_tag(takes_context=True)
 def get_articlebox(context, slug, template_name=None):
 
+    is_mobile = _is_mobile(context['request'])
+    cachekey = "GetArticleBox-{}-{}-{}".format(
+        slug,
+        template_name,
+        is_mobile)
+
+    render = cache.get(cachekey)
+    if render:
+        return render
+
     try:
         box = ArticleBox.objects.get(site=settings.SITE_ID, slug=slug,
                                      date_available__lte=timezone.now(),
@@ -36,11 +48,15 @@ def get_articlebox(context, slug, template_name=None):
     if template_name:
         t = template.loader.get_template(template_name)
 
-    return t.render(template.Context({
+    render = t.render(template.Context({
         'articlebox': box,
         'slug': slug,
         'context': context
     }))
+
+    cache.set(cachekey, render, 3600)
+
+    return render
 
 
 @register.simple_tag(takes_context=True)
