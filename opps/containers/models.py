@@ -18,7 +18,7 @@ from opps.core.cache import _cache_key
 from opps.core.models import Publishable, Slugged, Channeling, Imaged
 from opps.core.tags.models import Tagged
 from opps.db.models.fields import JSONField
-from opps.boxes.models import BaseBox
+from opps.boxes.models import BaseBox, ThreadLocals
 
 from .signals import shorturl_generate, delete_container
 from .tasks import check_mirror_channel, check_mirror_site
@@ -255,22 +255,33 @@ class ContainerBox(BaseBox):
         verbose_name_plural = _(u'Containers boxes')
 
     def ordered_containers(self, field='order'):
+        lo = ThreadLocals()
         now = timezone.now()
-        return self.containers.filter(
+
+        queryset = self.containers.filter(
             models.Q(containerboxcontainers__date_end__gte=now) |
             models.Q(containerboxcontainers__date_end__isnull=True),
             published=True,
             date_available__lte=now,
             containerboxcontainers__date_available__lte=now
-        ).order_by('containerboxcontainers__order').distinct()
+        ).order_by(
+            'containerboxcontainers__order'
+        ).distinct().exclude(id__in=lo.excludes_container_box)
+        [lo.excludes_container_box.append(q.id) for q in queryset]
+        return queryset
 
     def ordered_box_containers(self):
         now = timezone.now()
-        return self.containerboxcontainers_set.filter(
+        lo = ThreadLocals()
+
+        queryset = self.containerboxcontainers_set.filter(
             models.Q(date_end__gte=now) |
             models.Q(date_end__isnull=True),
             date_available__lte=now
-        ).order_by('order').distinct()
+        ).order_by(
+            'order').distinct().exclude(id__in=lo.excludes_container_box)
+        [lo.excludes_container_box.append(q.id) for q in queryset]
+        return queryset
 
     def get_queryset(self):
         """

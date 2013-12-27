@@ -1,12 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
+
+from threading import local
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 
 from opps.core.models import Publishable, Channeling
+
+
+lo = local()
+
+
+def ThreadLocals():
+    lo.excludes_container_box = getattr(lo, 'excludes_container_box', [])
+    return lo
 
 
 class QuerySet(Publishable):
@@ -53,6 +64,7 @@ class QuerySet(Publishable):
 
         _app, _model = self.model.split('.')
         model = models.get_model(_app, _model)
+        lo = ThreadLocals()
 
         queryset = model.objects.filter(
             published=True,
@@ -75,7 +87,10 @@ class QuerySet(Publishable):
         if self.order == '-':
             queryset = queryset.order_by('-id')
 
-        return queryset[:self.limit]
+        queryset = queryset.exclude(
+            id__in=lo.excludes_container_box)[:self.limit]
+        [lo.excludes_container_box.append(q.id) for q in queryset]
+        return queryset
 
 
 class BaseBox(Publishable, Channeling):

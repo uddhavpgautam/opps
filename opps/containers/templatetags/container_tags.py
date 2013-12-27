@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+from threading import local
 
 from django import template
 from django.conf import settings
@@ -80,6 +81,7 @@ def get_containerbox(context, slug, template_name=None, **extra_context):
                 box = ContainerBox.objects.get(**filters)
             except ContainerBox.DoesNotExist:
                 pass
+
 
     t = template.loader.get_template('articles/articlebox_detail.html')
     if template_name:
