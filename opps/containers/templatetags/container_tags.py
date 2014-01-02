@@ -180,6 +180,11 @@ def get_post_content(post, template_name='containers/post_related.html',
     # REMOVE NEW LINES
     content = linebreaksbr(content)
 
+    # Fix embed allowfullscreen
+    # TinyMCE BUG
+    content = content.replace('allowfullscreen="allowfullscreen"',
+                              'allowfullscreen="true"')
+
     if not get_related:
         return content
 
@@ -254,6 +259,9 @@ def filter_queryset_by(queryset, **filters):
     if _cache:
         return _cache
 
+    if not getattr(queryset, 'query', False):
+        return queryset
+
     if not queryset.query.can_filter():
         # create new queryset based on the ids and apply filter
         ids = [i.id for i in queryset]
@@ -272,6 +280,9 @@ def exclude_queryset_by(queryset, **excludes):
     _cache = cache.get(cachekey)
     if _cache:
         return _cache
+
+    if not getattr(queryset, 'query', False):
+        return queryset
 
     if not queryset.query.can_filter():
         # create new queryset based on the ids and apply filter
@@ -397,3 +408,17 @@ def get_containerbox_list(context, slug, num=0, template_name=None):
     cache.set(cachekey, render, settings.OPPS_CACHE_EXPIRE)
 
     return render
+
+
+@register.assignment_tag
+def get_custom_field_value(obj, field_slug):
+    """
+    Return a custom field value
+    """
+    if not callable(getattr(obj, 'custom_fields')):
+        return None
+
+    if not obj.custom_fields():
+        return None
+
+    return obj.custom_fields().get(field_slug)
