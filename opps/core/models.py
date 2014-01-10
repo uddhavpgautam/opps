@@ -274,6 +274,9 @@ class Imaged(models.Model):
             ci.image_id: ci.caption for ci in self.containerimage_set.all()
         }
 
+        if self.main_image:
+            captions[self.main_image.id] = self.main_image.caption
+
         for im in imgs:
             caption = captions.get(im.pk)
             if caption:
@@ -334,12 +337,14 @@ class Config(Publishable):
         'containers.Container',
         null=True, blank=True,
         help_text=_(u'Only published container'),
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        verbose_name=_(u'Container')
     )
     channel = models.ForeignKey(
         'channels.Channel',
         null=True, blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        verbose_name=_(u'Channel')
     )
 
     class Meta:
